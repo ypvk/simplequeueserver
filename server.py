@@ -21,7 +21,7 @@ class QueueServer:
         while True:
             connection, address = sock.accept()
             try:
-                connection.settimeout(5)
+                connection.settimeout(60)
                 buf = connection.recv(1024)
                 if buf:
                     print address, buf
@@ -35,6 +35,21 @@ class QueueServer:
 
     def paraphrase(self, string, connection):
         if string == "Size":
-            connection.send(str(self.queue.qsize()))
-        elif strin
+            connection.send(str(len(len(self.queue)))
+        elif string == "List":
+            connectin.send(",".join(self.queue))
+        elif string == "Pop":
+            if len(self.queue) == 0:
+                connection.send("None")
+            else:
+                connection.send(self.queue.popleft())
+        else:
+            if len(self.queue) == QUEUE_SIZE:
+                connection.send("Full")
+            else:
+                self.queue.append(string)
+                connection.send("Done")
+
 if __name__ == "__main__":
+    server = QueueServer()
+    server.start()
